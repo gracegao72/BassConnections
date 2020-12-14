@@ -15,3 +15,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(rvest)
 ```
+
+
+##Bass Connections Project
+
+##Scrapping the URLs
+Scrap all the URLs for every artist in the whole Database
