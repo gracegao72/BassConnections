@@ -1,0 +1,135 @@
+---
+title: "antwerp_initial"
+author: "Grace Gao"
+date: "12/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load library packages
+
+```{r}
+library(tidyverse)
+library(rvest)
+library(xlsx)
+library(writexl)
+```
+
+##Scrapping the URLs
+Scrap all the URLs for every artist in the whole Database
+
+#### Import a webpage using `read_html`
+
+```{r get_pageoneurl}
+results_antwerp <- read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/index.php?occupation_id=56%2C79%2C542&subjectmat=&place=Antwerpen&gender=&year_start=1556&year_end=1725&formtype=selections&page=1&subtask=selections")
+```
+
+```{r display_htmlpage}
+#displaying the html page
+#results_antwerp
+```
+
+### Getting text of first page
+Quick Info:
+li = list node in HTML
+html_text: Extract attributes, text and tag name from HTML.
+
+```{r extract_pageone_text}
+names_antwerp <- results_antwerp %>% 
+  html_nodes("li") %>% 
+  html_text()
+
+names_antwerp
+```
+
+### Parsing to get the individual links
+href: <a href="https://www.w3schools.com">Visit W3Schools.com!</a>
+href allows you to click on the artist name and be redirected to their page
+
+```{r text_url_pageone}
+url_antwerp <- results_antwerp %>% 
+  html_nodes("li a") %>% 
+  html_attr("href")
+
+url_antwerp #list of individual links from page one
+```
+
+### Create a tibble
+
+Puts the vectors of names and url into a tibble to be easily accesible
+
+```{r tibble_pageone}
+results_df_antwerp <- tibble(names_antwerp, url_antwerp)
+
+results_df_antwerp
+```
+
+This section we mutate the urls in the dataset to represent the actual urls (utilizing glue and mutate)
+
+```{r mutate_url}
+results_df_antwerp <- results_df_antwerp %>% 
+  mutate(base_url = "http://www.vondel.humanities.uva.nl") %>% 
+  mutate(full_url = glue::glue("{base_url}{url}")) %>% 
+  mutate(full_url = str_replace_all(full_url, "\\.\\.", ""))
+
+results_df_antwerp
+```
+
+
+#### Import a webpage using `read_html` Antwerp pg 2
+
+```{r get_pageoneurl}
+results_antwerp_2 <- read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/index.php?occupation_id=56%2C79%2C542&subjectmat=&place=Antwerpen&gender=&year_start=1556&year_end=1725&formtype=selections&page=2&subtask=selections")
+```
+
+```{r display_htmlpage}
+#displaying the html page
+#results_antwerp_2
+```
+
+### Getting text of first page
+Quick Info:
+li = list node in HTML
+html_text: Extract attributes, text and tag name from HTML.
+
+```{r extract_pageone_text}
+names_antwerp_2 <- results_antwerp_2 %>% 
+  html_nodes("li") %>% 
+  html_text()
+
+names_antwerp_2
+```
+
+### Parsing to get the individual links
+href: <a href="https://www.w3schools.com">Visit W3Schools.com!</a>
+href allows you to click on the artist name and be redirected to their page
+
+```{r text_url_pageone}
+url_antwerp_2 <- results_antwerp_2 %>% 
+  html_nodes("li a") %>% 
+  html_attr("href")
+
+url_antwerp_2 #list of individual links from page one
+```
+
+### Create a tibble
+
+Puts the vectors of names and url into a tibble to be easily accesible
+
+```{r tibble_pageone}
+results_df_antwerp_2 <- tibble(names_antwerp_2, url_antwerp_2)
+
+results_df_antwerp_2
+```
+```{r tibble_pageone}
+results_df_antwerp
+
+write_xlsx(x = results_df_antwerp, path = "antwerp_data.xlsx", col_names = TRUE)
+
+
+results_df_antwerp_2
+write_xlsx(x = results_df_antwerp_2, path = "antwerp2_data.xlsx", col_names = TRUE)
+```
