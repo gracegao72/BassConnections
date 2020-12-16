@@ -1,0 +1,46 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf500
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+https://data.create.humanities.uva.nl/\
+\
+\
+PREFIX xml: <http://www.w3.org/XML/1998/namespace/>\
+#ecartico\
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\
+PREFIX owl: <http://www.w3.org/2002/07/owl#>\
+PREFIX schema: <http://schema.org/>\
+#reference\
+#http://grlc.io/api/rlzijdeman/ecartico-sparql#/rkdArtists/get_rkdArtists_mesdag\
+\
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+SELECT * WHERE \{\
+  #person name, birth and death date\
+    ?person rdf:type schema:Person ; # give me all things that are of type 'Person' as defined by the schema.org vocabulary and label that 'person'\
+  		schema:birthDate ?birthDate ; # for these 'person's (things) provide me their birthdate;\
+   		schema:deathDate ?deathDate ; # and their death date\
+       	schema:name ?personName . # oh.. and and their name as well (just so we can keep track)\
+  FILTER (?birthDate < "1725-01-01"^^xsd:date) # now just keep the persons born before 1725\
+  FILTER (?deathDate > "1556-12-31"^^xsd:date) # AND those who died in 1556 or later\
+  #Person's birth place\
+  ?personEcartico schema:birthPlace ?birthPlaceEcartico ;\
+                                    # owl:sameAs ?dbnl ; #shows all the other databases that artist names are found\
+                                     schema:name ?personName .\
+  \
+  ?birthPlaceEcartico schema:name ?birthPlace .\
+  \
+  #Person's death place\
+  ?personEcartico schema:deathPlace ?deathPlaceEcartico ;\
+                                    # owl:sameAs ?dbnl ; #shows all the other databases that artist names are found\
+                                     schema:name ?personName .\
+  \
+  ?deathPlaceEcartico schema:name ?deathPlace .\
+  \
+\
+       \
+ \}}
