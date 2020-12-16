@@ -21,15 +21,11 @@ library(writexl)
 ##Scrapping the URLs
 Scrap all the URLs for every artist in the whole Database
 
+###Webscraping for the URLs of Printers, booksellers and publishers: Male
 #### Import a webpage using `read_html`
 
 ```{r get_pageoneurl}
 results_antwerp_book <- read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/index.php?occupation_id=28%2C663%2C29%2C658%2C32%2C30%2C1028%2C243&subjectmat=&place=antwerpen&gender=male&year_start=1556&year_end=1725&formtype=selections&page=1&subtask=selections")
-```
-
-```{r display_htmlpage}
-#displaying the html page
-#results_antwerp
 ```
 
 ### Getting text of first page
@@ -79,34 +75,20 @@ results_df_antwerp_book
 ```
 
 
-#### Import a webpage using `read_html` Antwerp pg 2
+#### Import a webpage using `read_html` Antwerp - Printers, booksellers and publishers: Male - pg 2
 
-```{r get_pageoneurl}
+```{r get_pagetwobookurl}
 results_antwerp_book2 <- read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/index.php?occupation_id=28%2C663%2C29%2C658%2C32%2C30%2C1028%2C243&subjectmat=&place=antwerpen&gender=male&year_start=1556&year_end=1725&formtype=selections&page=2&subtask=selections")
 ```
-
-```{r display_htmlpage}
-#displaying the html page
-#results_antwerp_2
-```
-
-### Getting text of first page
-Quick Info:
-li = list node in HTML
-html_text: Extract attributes, text and tag name from HTML.
-
-```{r extract_pageone_text}
+### Getting text of second page
+```{r extract_book2}
 names_antwerp_book <- results_antwerp_book2 %>% 
   html_nodes("li") %>% 
   html_text()
 
-names_antwerp_book
+#names_antwerp_book
 ```
-
 ### Parsing to get the individual links
-href: <a href="https://www.w3schools.com">Visit W3Schools.com!</a>
-href allows you to click on the artist name and be redirected to their page
-
 ```{r text_url_pageone}
 url_antwerp_book <- results_antwerp_book2 %>% 
   html_nodes("li a") %>% 
@@ -114,33 +96,74 @@ url_antwerp_book <- results_antwerp_book2 %>%
 
 url_antwerp_book #list of individual links from page one
 ```
-
 ### Create a tibble
-
-Puts the vectors of names and url into a tibble to be easily accesible
-
 ```{r tibble_pageone}
 results_df_antwerp_book2 <- tibble(names_antwerp_book, url_antwerp_book)
 
-results_df_antwerp_book2
+#results_df_antwerp_book2
 
 ```
+###Mutating to create new url
 ```{r mutate_url}
 results_df_antwerp_book2 <- results_df_antwerp_book2 %>% 
   mutate(base_url = "http://www.vondel.humanities.uva.nl") %>% 
   mutate(full_url = glue::glue("{base_url}{url_antwerp_book}")) %>% 
   mutate(full_url = str_replace_all(full_url, "\\.\\.", ""))
 
-results_df_antwerp_book2
+#results_df_antwerp_book2
 ```
 
+### Converting tibbles into Excel Files
 ```{r tibble_new}
 
 df_antwerp_book <- bind_rows(results_df_antwerp_book, results_df_antwerp_book2)
 
 ```
 
-
-```{r tibble_pageone}
+```{r create_excel}
 write_xlsx(x = df_antwerp_book, path = "antwerp_book_data.xlsx", col_names = TRUE)
+```
+
+#### Import a webpage using `read_html` Antwerp - Printers, booksellers and publishers: Female
+
+```{r get_pagetwobookurl}
+results_antwerp_book_fem <- read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/index.php?occupation_id=28%2C663%2C29%2C658%2C32%2C30%2C1028%2C243&subjectmat=&place=antwerpen&gender=female&year_start=1556&year_end=1725&formtype=selections&page=1&subtask=selections")
+```
+### Getting text of second page
+```{r extract_book2}
+names_antwerp_book_fem <- results_antwerp_book_fem %>% 
+  html_nodes("li") %>% 
+  html_text()
+
+names_antwerp_book_fem
+```
+### Parsing to get the individual links
+```{r text_url_pageone}
+url_antwerp_book_fem <- results_antwerp_book_fem %>% 
+  html_nodes("li a") %>% 
+  html_attr("href")
+
+url_antwerp_book_fem #list of individual links from page one
+```
+### Create a tibble
+```{r tibble_pageone}
+results_df_antwerp_book_fem <- tibble(names_antwerp_book_fem, url_antwerp_book_fem)
+
+#results_df_antwerp_book2
+
+```
+###Mutating to create new url
+```{r mutate_url}
+results_df_antwerp_book_fem <- results_df_antwerp_book_fem %>% 
+  mutate(base_url = "http://www.vondel.humanities.uva.nl") %>% 
+  mutate(full_url = glue::glue("{base_url}{url_antwerp_book_fem}")) %>% 
+  mutate(full_url = str_replace_all(full_url, "\\.\\.", ""))
+
+results_df_antwerp_book_fem
+```
+
+### Converting tibbles into Excel Files
+
+```{r create_excel}
+#write_xlsx(x = results_df_antwerp_book_fem, path = "antwerp_book_fem_data.xlsx", col_names = TRUE)
 ```
