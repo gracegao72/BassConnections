@@ -1,0 +1,71 @@
+---
+title: "antwerp_data_engraver"
+author: "Grace Gao"
+date: "12/16/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r importing_libraries}
+library(broom)
+library(tidyverse)
+library(readr)
+library(tidyr)
+library(stringr)
+library(dplyr)
+library(rvest)
+library(xlsx)
+library(writexl)
+```
+
+###Read in CSV file for url data
+```{r opening_data}
+antwerp_engraver_url_data <- read_csv("data/antwerp_engraver_url.csv")
+```
+
+###Create a dataframe
+
+```{r create_dataframe}
+antwerp_engraver_df = data.frame()
+
+```
+
+
+### Create the loop
+This section will loop through each url in the dataframe
+```{r convert_vector}
+
+vector_engraver_antwerp <- as.vector(unlist(antwerp_engraver_url_data['full_url']))
+
+```
+
+```{r create_loop}
+##loops through the rows -- each url
+for(value in vector_engraver_antwerp){
+  #print(antwerp_engraver_url_data[i, ])
+  #antwerp_engraver_link = antwerp_engraver_url_data[i, ]
+  #print(value)
+  results_antwerp_engraver = read_html(value) #read's html of each link page
+  
+  ##getting text
+  names_antwerp_engraver <- results_antwerp_engraver %>% 
+  html_nodes("li") %>% 
+  html_text()
+  
+  ##parsing individual link
+  url_antwerp_engraver <- results_antwerp_engraver %>% 
+  html_nodes("li a") %>% 
+  html_attr("href")
+  
+  ##puts the url and names into a tibble
+  results_df_antwerp_engraver <- tibble(names_antwerp_engraver, url_antwerp_engraver)
+  
+  antwerp_engraver_df = bind_rows(antwerp_engraver_df, results_df_antwerp_engraver)
+  
+}
+
+
+```
