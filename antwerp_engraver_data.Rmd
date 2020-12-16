@@ -63,9 +63,29 @@ for(value in vector_engraver_antwerp){
   ##puts the url and names into a tibble
   results_df_antwerp_engraver <- tibble(names_antwerp_engraver, url_antwerp_engraver)
   
+  #bind the url to the final dataset
   antwerp_engraver_df = bind_rows(antwerp_engraver_df, results_df_antwerp_engraver)
   
 }
 
 
 ```
+
+###Mutating the urls to get final url
+```{r fix_theurl}
+antwerp_engraver_df <- antwerp_engraver_df %>% 
+  mutate(base_url = "http://www.vondel.humanities.uva.nl") %>% 
+  mutate(full_url = glue::glue("{base_url}{url_antwerp_engraver}")) %>% 
+  mutate(full_url = str_replace_all(full_url, "\\.\\.", ""))
+
+antwerp_engraver_df
+
+```
+
+###Export data into Excel
+```{r export_data}
+write_xlsx(x = antwerp_engraver_df, path = "antwerp_book_engraver_data.xlsx", col_names = TRUE)
+
+```
+
+
