@@ -121,5 +121,5 @@ amsterdam_engraver_df
   mutate(full_url = str_replace_all(full_url, "\\.\\.", ""))
 
 results_df_amsterdam_engraver_fem 
-write_xlsx(x = results_df_amsterdam_engraver_fem, path = "amsterdam_engraver_data_fem.xlsx", col_names = TRUE)
+#write_xlsx(x = results_df_amsterdam_engraver_fem, path = "amsterdam_engraver_data_fem.xlsx", col_names = TRUE)
 ```
