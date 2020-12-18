@@ -1,0 +1,91 @@
+---
+title: "combine_data"
+author: "Grace Gao"
+date: "12/17/2020"
+output: html_document
+---
+
+###Load in packages
+
+```{r packages}
+library("readxl")
+library(tidyverse)
+```
+
+###read in Excel
+
+```{r read_data}
+antwerp_data <- read_excel("antwerp_data.xlsx")
+amsterdam_data <- read_excel("amsterdam_data.xlsx")
+```
+
+###Combine Data
+```{r combine_data}
+combined_data = bind_rows(antwerp_data, amsterdam_data)
+```
+
+###Export new data to excel
+```{r export_data}
+
+#write_xlsx(x = combined_data, path = "combined_data.xlsx", col_names = TRUE)
+
+```
+
+###Creating new columns
+
+Painter
+```{r create_col_painter}
+
+combined_data <- combined_data %>%
+  mutate(painter = case_when(
+      occupation == "painter" ~ 1,
+      TRUE ~ 0
+    )
+  )
+
+```
+
+Engraver
+```{r create_col_painter}
+
+combined_data <- combined_data %>%
+  mutate(engraver_etcher = case_when(
+      occupation == "engravers and etchers" ~ 1,
+      TRUE ~ 0
+    )
+  )
+
+```
+
+Books
+```{r create_col_painter}
+
+combined_data <- combined_data %>%
+  mutate(print_book_publish = case_when(
+      occupation == "printers, booksellers, and publishers" ~ 1,
+      TRUE ~ 0
+    )
+  )
+
+```
+
+
+Gold/Silversmiths
+```{r create_col_painter}
+
+combined_data <- combined_data %>%
+  mutate(gold_silver_smith = case_when(
+      occupation == "goldsmiths and silversmiths" ~ 1,
+      TRUE ~ 0
+    )
+  )
+
+```
+
+###Export new data to excel
+```{r export_data}
+
+write_xlsx(x = combined_data, path = "combined_data_newcol.xlsx", col_names = TRUE)
+
+```
+
