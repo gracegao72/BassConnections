@@ -1,0 +1,97 @@
+---
+title: "webscrape_combined"
+author: "Grace Gao"
+date: "1/11/2021"
+output: html_document
+---
+```{r packages}
+library("readxl")
+library(tidyverse)
+```
+
+###read in Excel
+
+```{r read_data}
+temp_children_data <- read_excel("combined_data_r.xlsx")
+```
+
+### turn urls into vector
+
+```{r url_vector}
+
+vector_url_combined <- as.vector(unlist(temp_children_data['full_url']))
+##create data frame
+num_children_df <- data.frame()
+
+```
+###Loop through url
+
+```{r create_loop}
+##loops through the rows -- each url
+for(value in vector_url_combined){
+  #print(antwerp_engraver_url_data[i, ])
+  #antwerp_engraver_link = antwerp_engraver_url_data[i, ]
+ print(value)
+  results_vector_children = read_html(value) #read's html of each link page
+ 
+  ##getting child
+  child_filter <- results_vector_children %>% 
+  html_nodes("ul li a") %>% 
+  html_attr("rel") %>% 
+  as_tibble() %>% 
+  mutate(id = row_number()) %>% 
+  filter(str_detect(value, "children"))
+child_filter
+
+
+child_text <- results_vector_children  %>% 
+  html_nodes("ul li a") %>% 
+  html_text() %>% 
+  as_tibble() %>% 
+  rename(text = value) %>% 
+  mutate(id = row_number()) %>% 
+  inner_join(child_filter)
+
+rownum <- nrow(child_text)
+print(rownum)
+
+rownum_tibble <- tibble(value, rownum)
+num_children_df = bind_rows(num_children_df, rownum_tibble)
+}
+
+
+```
+
+```{r df}
+rownum <- nrow(child_text)
+print(rownum)
+```
+
+### Children Example Webscrape
+```{r}
+# http://www.vondel.humanities.uva.nl/ecartico/persons/10579
+# schema:children
+
+emanuel <-  read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/39079")
+
+child_filter <- emanuel %>% 
+  html_nodes("ul li a") %>% 
+  html_attr("rel") %>% 
+  as_tibble() %>% 
+  mutate(id = row_number()) %>% 
+  filter(str_detect(value, "children"))
+child_filter
+
+child_text <- emanuel  %>% 
+  html_nodes("ul li a") %>% 
+  html_text() %>% 
+  as_tibble() %>% 
+  rename(text = value) %>% 
+  mutate(id = row_number()) %>% 
+  inner_join(child_filter)
+
+child_text %>% 
+  pull(text)
+
+
+```
