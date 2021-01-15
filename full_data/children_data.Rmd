@@ -7,6 +7,12 @@ output: html_document
 ```{r packages}
 library("readxl")
 library(tidyverse)
+library('xml2')
+library(rvest)
+library(openxlsx)
+library(readxl)
+library(writexl)
+
 ```
 
 ###read in Excel
@@ -31,6 +37,7 @@ num_children_df <- data.frame()
 for(value in vector_url_combined){
   #print(antwerp_engraver_url_data[i, ])
   #antwerp_engraver_link = antwerp_engraver_url_data[i, ]
+
  print(value)
   results_vector_children = read_html(value) #read's html of each link page
  
@@ -57,6 +64,9 @@ print(rownum)
 
 rownum_tibble <- tibble(value, rownum)
 num_children_df = bind_rows(num_children_df, rownum_tibble)
+
+Sys.sleep(2)
+
 }
 
 
@@ -66,6 +76,14 @@ num_children_df = bind_rows(num_children_df, rownum_tibble)
 rownum <- nrow(child_text)
 print(rownum)
 ```
+###First Half
+
+```{r firsthalf}
+
+write_xlsx(x = num_children_df, path = "first_part_children_data.xlsx", col_names = TRUE)
+
+```
+
 
 ### Children Example Webscrape
 ```{r}
@@ -73,6 +91,8 @@ print(rownum)
 # schema:children
 
 emanuel <-  read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/39079")
+
+
 
 child_filter <- emanuel %>% 
   html_nodes("ul li a") %>% 

@@ -2313,48 +2313,15 @@ results_by_page %&gt;%
 <p>Now you know how to get a URL for each name in the target database. That is, you can crawl the target site’s navigation. The next goal is to import and parse the HTML for each <em>name</em>. In other words, in my development tibble, I still need to crawl the individual target names, all 150 names, 50 names per summary page for each of the 3 development pages. Below is an example of gathering and parsing information for one URL representing one person. The information gathered is information from the detailed names page about the children of one person in the target database.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBodHRwOi8vd3d3LnZvbmRlbC5odW1hbml0aWVzLnV2YS5ubC9lY2FydGljby9wZXJzb25zLzEwNTc5XG4jIHNjaGVtYTpjaGlsZHJlblxuXG5lbWFudWVsIDwtICByZWFkX2h0bWwoXCJodHRwOi8vd3d3LnZvbmRlbC5odW1hbml0aWVzLnV2YS5ubC9lY2FydGljby9wZXJzb25zLzEwNTc5XCIpXG5cbmNoaWxkX2ZpbHRlciA8LSBlbWFudWVsICU+JSBcbiAgaHRtbF9ub2RlcyhcInVsIGxpIGFcIikgJT4lIFxuICBodG1sX2F0dHIoXCJyZWxcIikgJT4lIFxuICBhc190aWJibGUoKSAlPiUgXG4gIG11dGF0ZShpZCA9IHJvd19udW1iZXIoKSkgJT4lIFxuICBmaWx0ZXIoc3RyX2RldGVjdCh2YWx1ZSwgXCJjaGlsZHJlblwiKSlcbmNoaWxkX2ZpbHRlclxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBodHRwOi8vd3d3LnZvbmRlbC5odW1hbml0aWVzLnV2YS5ubC9lY2FydGljby9wZXJzb25zLzEwNTc5XG4jIHNjaGVtYTpjaGlsZHJlblxuXG5lbWFudWVsIDwtICByZWFkX2h0bWwoXCJodHRwOi8vd3d3LnZvbmRlbC5odW1hbml0aWVzLnV2YS5ubC9lY2FydGljby9wZXJzb25zLzEwNTc5XCIpXG5gYGAifQ== -->
 <pre class="r"><code># http://www.vondel.humanities.uva.nl/ecartico/persons/10579
 # schema:children
 
-emanuel &lt;-  read_html(&quot;http://www.vondel.humanities.uva.nl/ecartico/persons/10579&quot;)
-
-child_filter &lt;- emanuel %&gt;% 
-  html_nodes(&quot;ul li a&quot;) %&gt;% 
-  html_attr(&quot;rel&quot;) %&gt;% 
-  as_tibble() %&gt;% 
-  mutate(id = row_number()) %&gt;% 
-  filter(str_detect(value, &quot;children&quot;))
-child_filter</code></pre>
+emanuel &lt;-  read_html(&quot;http://www.vondel.humanities.uva.nl/ecartico/persons/10579&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbInRibF9kZiIsInRibCIsImRhdGEuZnJhbWUiXSwibnJvdyI6MywibmNvbCI6Mn0sInJkZiI6Ikg0c0lBQUFBQUFBQUE1VlF3V29DTVJDZHpSckZGYTNnZCt4Q0tZWGl1ZlFEaWdXdk1SdmRZRXdrbTYwZSsrTjFPMWtUS0xrWlNETHpadDZidkh5K2IxK0tiUUVBT1l4dzV4UkRvRitiai9JTllFUXd5YkF3OWZjVm0xWVllSEFaR0w3dzFQSkduTmlhTjFMVlZ1Z0hZWUQ1SUFaRDJUOWxsa3ltbXAxRUc2YVNDSDR6MVltUUVGa25uS2sxbHlyeS9BRHlnMGZmOTcrcE9GZXNqZUlSTEdybVdMVzN5TWZzbGxBbTV1eWswVWdpL2o5b1FzNXNBaXc3N1Y5U2w3enA5TEY4ZmcwK003aXZlWWp6ZnpHNXp5UjkwS0pCYXl6MFFlcm9teXEyRXlva0M3UThPSzdPVm1vWHJTRGFWczQ0RnZzS2JsUkVCbk53K3dQZUlaUWdCd0lBQUE9PSJ9 -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["value"],"name":[1],"type":["chr"],"align":["left"]},{"label":["id"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"schema:children","2":"9"},{"1":"schema:children","2":"10"},{"1":"schema:children","2":"11"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[3]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5jaGlsZF90ZXh0IDwtIGVtYW51ZWwgICU+JSBcbiAgaHRtbF9ub2RlcyhcInVsIGxpIGFcIikgJT4lIFxuICBodG1sX3RleHQoKSAlPiUgXG4gIGFzX3RpYmJsZSgpICU+JSBcbiAgcmVuYW1lKHRleHQgPSB2YWx1ZSkgJT4lIFxuICBtdXRhdGUoaWQgPSByb3dfbnVtYmVyKCkpICU+JSBcbiAgaW5uZXJfam9pbihjaGlsZF9maWx0ZXIpXG5gYGAifQ== -->
-<pre class="r"><code>
-child_text &lt;- emanuel  %&gt;% 
-  html_nodes(&quot;ul li a&quot;) %&gt;% 
-  html_text() %&gt;% 
-  as_tibble() %&gt;% 
-  rename(text = value) %&gt;% 
-  mutate(id = row_number()) %&gt;% 
-  inner_join(child_filter)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiSm9pbmluZywgYnkgPSBcImlkXCJcbiJ9 -->
-<pre><code>Joining, by = &quot;id&quot;</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2hpbGRfdGV4dCAlPiUgXG4gIHB1bGwodGV4dClcbmBgYCJ9 -->
-<pre class="r"><code>child_text %&gt;% 
-  pull(text)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiQWxleGFuZGVyICAgQWRyaWFlbnNzZW4sIGFsaWFzOiAgU2FuZGVyICgxNTg3IC0gMTY2MSlcIiAgICAgICAgICAgICAgICAgIFxuWzJdIFwiVmluY2VudCAgIEFkcmlhZW5zc2VuIEksIGFsaWFzOiAgTWFuY2lvbGEgLyBMZWNrZXJiZWV0aWVuICgxNTk1IC0gMTY3NSlcIlxuWzNdIFwiTmljbGFlcyAgIEFkcmlhZW5zc2VuLCBhbGlhczogIE5pY29sYWVzIEFkcmlhZW5zc2VuICgxNTk4IC0gY2EuIDE2NDkpXCIgIFxuIn0= -->
-<pre><code>[1] &quot;Alexander   Adriaenssen, alias:  Sander (1587 - 1661)&quot;                  
-[2] &quot;Vincent   Adriaenssen I, alias:  Manciola / Leckerbeetien (1595 - 1675)&quot;
-[3] &quot;Niclaes   Adriaenssen, alias:  Nicolaes Adriaenssen (1598 - ca. 1649)&quot;  </code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gb3Blbi5jb25uZWN0aW9uKHgsIFwicmJcIikgOiBcbiAgVGltZW91dCB3YXMgcmVhY2hlZDogW3d3dy52b25kZWwuaHVtYW5pdGllcy51dmEubmxdIENvbm5lY3Rpb24gdGltZWQgb3V0IGFmdGVyIDEwMDAxIG1pbGxpc2Vjb25kc1xuIn0= -->
+<pre><code>Error in open.connection(x, &quot;rb&quot;) : 
+  Timeout was reached: [www.vondel.humanities.uva.nl] Connection timed out after 10001 milliseconds</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
