@@ -28,17 +28,23 @@ temp_children_data <- read_excel("combined_data_r.xlsx")
 vector_url_combined <- as.vector(unlist(temp_children_data['full_url']))
 ##create data frame
 num_children_df <- data.frame()
+num_children_2_df <-data.frame()
+num_children_3_df <- data.frame()
+num_children_4_df <- data.frame()
 
 ```
 ###Loop through url
 
 ```{r create_loop}
 ##loops through the rows -- each url
+  i = 1
 for(value in vector_url_combined){
   #print(antwerp_engraver_url_data[i, ])
   #antwerp_engraver_link = antwerp_engraver_url_data[i, ]
 
  print(value)
+  print(i)
+  i = i+1
   results_vector_children = read_html(value) #read's html of each link page
  
   ##getting child
@@ -63,7 +69,8 @@ rownum <- nrow(child_text)
 print(rownum)
 
 rownum_tibble <- tibble(value, rownum)
-num_children_df = bind_rows(num_children_df, rownum_tibble)
+#num_children_df = bind_rows(num_children_df, rownum_tibble)
+num_children_4_df = bind_rows(num_children_4_df, rownum_tibble)
 
 Sys.sleep(2)
 
@@ -80,7 +87,7 @@ print(rownum)
 
 ```{r firsthalf}
 
-write_xlsx(x = num_children_df, path = "first_part_children_data.xlsx", col_names = TRUE)
+write_xlsx(x = num_children_4_df, path = "fourth_part_children_data.xlsx", col_names = TRUE)
 
 ```
 
