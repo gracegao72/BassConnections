@@ -1,0 +1,132 @@
+---
+title: "Rvest Demo"
+output: html_notebook
+---
+
+
+
+```{r}
+library(tidyverse)
+library(rvest)
+```
+
+Following the example from https://rvest.tidyverse.org/
+
+```{r}
+results <- read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/index.php?subtask=browse")
+```
+
+
+
+```{r}
+results
+```
+
+```{r}
+names <- results %>% 
+  html_nodes("li") %>% 
+  html_text()
+
+names
+```
+
+
+```{r}
+url <- results %>% 
+  html_nodes("li a") %>% 
+  html_attr("href")
+
+url
+```
+
+
+```{r}
+results_df <- tibble(names, url)
+
+results_df
+```
+
+```{r}
+results_df <- results_df %>% 
+  mutate(base_url = "http://www.vondel.humanities.uva.nl") %>% 
+  mutate(full_url = paste(base_url, url, sep = ""))
+```
+
+
+
+```{r}
+results_df %>% 
+  slice(5)
+```
+
+
+```{r}
+results
+```
+
+```{r}
+results_page2 <- read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/index.php?subtask=browse&field=surname&strtchar=A&page=2")
+```
+
+```{r}
+results %>% 
+  html_nodes("div.subnav a") %>% 
+  html_text()
+
+```
+
+```{r loop}
+arr_pages <- results %>% 
+  html_nodes("div.subnav a") %>% 
+  html_attr("href")
+
+arr_pages
+```
+
+
+
+```{r loop_2}
+
+pages_df <- data.frame(arr_pages)
+
+pages_df <- pages_df %>%
+  slice(-c(1:4))
+
+pages_df <- pages_df %>% 
+  mutate(base_url = "http://www.vondel.humanities.uva.nl") %>% 
+  mutate(full_url = paste(base_url, arr_pages, sep = ""))
+```
+
+```{r loop_url}
+
+new_url_vec <- pages_df$full_url
+new_url_vec
+
+```
+
+```{r loop_through_arr}
+
+for(i in new_url_vec){
+  
+  #temp url
+  temp_result <- read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/index.php?subtask=browse")
+  
+  #extract names
+  names_temp <- temp_result %>% 
+              html_nodes("li") %>% 
+              html_text()
+  
+  #extract url
+  url_temp <- temp_result %>% 
+              html_nodes("li a") %>% 
+              html_attr("href")
+  
+ results_df <- tibble(names, url)
+
+}
+
+
+
+
+```
+
