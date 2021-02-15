@@ -27,10 +27,8 @@ temp_children_data <- read_excel("combined_data_r.xlsx")
 
 vector_url_combined <- as.vector(unlist(temp_children_data['full_url']))
 ##create data frame
-num_children_df <- data.frame()
-num_children_2_df <-data.frame()
-num_children_3_df <- data.frame()
-num_children_4_df <- data.frame()
+num_children_6_df <-data.frame()
+
 
 ```
 ###Loop through url
@@ -70,7 +68,7 @@ print(rownum)
 
 rownum_tibble <- tibble(value, rownum)
 #num_children_df = bind_rows(num_children_df, rownum_tibble)
-num_children_4_df = bind_rows(num_children_4_df, rownum_tibble)
+num_children_6_df = bind_rows(num_children_6_df, rownum_tibble)
 
 Sys.sleep(2)
 
@@ -87,7 +85,7 @@ print(rownum)
 
 ```{r firsthalf}
 
-write_xlsx(x = num_children_4_df, path = "fourth_part_children_data.xlsx", col_names = TRUE)
+write_xlsx(x = num_children_6_df, path = "sixth_part_children_data.xlsx", col_names = TRUE)
 
 ```
 
@@ -97,7 +95,7 @@ write_xlsx(x = num_children_4_df, path = "fourth_part_children_data.xlsx", col_n
 # http://www.vondel.humanities.uva.nl/ecartico/persons/10579
 # schema:children
 
-emanuel <-  read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/39079")
+emanuel <-  read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/48213")
 
 
 
