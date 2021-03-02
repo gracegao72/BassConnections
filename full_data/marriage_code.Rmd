@@ -22,6 +22,33 @@ library(dplyr)
 
 ```
 
+####merge the Data
+
+```{r merge_data}
+full_data <- read_excel("final_combined.xlsx")
+marriage_data <- read_excel("spouse_data.xlsx")
+
+
+marriage_data <- marriage_data %>% 
+  mutate(spouse_count = rownum)%>%
+  select(spouse_count, string_spouse)
+
+
+
+glimpse(marriage_data)
+
+full_data <- bind_cols(full_data, marriage_data)
+
+```
+
+```{r}
+write_xlsx(x = full_data, path = "updated_full_df.xlsx", col_names = TRUE)
+
+
+```
+
+
+
 ###read in Excel
 
 ```{r read_data}
@@ -118,7 +145,7 @@ glimpse(test_marriage_df)
 ```
 ```{r}
 
-write_xlsx(x = test_marriage_df, path = "test_marriage_data.xlsx", col_names = TRUE)
+write_xlsx(x = test_marriage_df, path = "spouse_data.xlsx", col_names = TRUE)
 
 ```
 
