@@ -25,7 +25,7 @@ library(dplyr)
 ###read in Excel
 
 ```{r read_data}
-temp_marriage_data <- read_excel("test_marriage_num.xlsx")
+temp_marriage_data <- read_excel("webscrape_data.xlsx")
 ```
 
 ### turn urls into vector
