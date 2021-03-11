@@ -22,45 +22,73 @@ library(dplyr)
 
 ```
 
-### Marriage Example Webscrape
+### occupation address webscrape
 ```{r}
 emanuel <-  read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/17254")
 
 ```
 
-```{r}
-
-marriage_filter <- emanuel %>% 
-  html_nodes("ul li a") %>% 
-  html_attr("rel") %>% 
-  as_tibble() %>% 
-  mutate(id = row_number()) %>% 
-  filter(str_detect(value, "workLocation"))
-marriage_filter
-```
 
 ```{r}
-emanuel  %>% 
-  html_nodes(css = "ul:nth-child(6)") %>% 
+#using the computer extension 
+
+location <- emanuel  %>% 
+  html_nodes(css = "ul:nth-child(12)") %>% 
   html_text() %>% 
   as_tibble() 
+emanuel_tibble
+```
+
+#Death and Birth Place
+```{r}
+#using the computer extension 
+
+birth <- emanuel  %>% 
+  html_nodes(css = "tr:nth-child(4) td+ td") %>% 
+  html_text() %>% 
+  as_tibble() 
+emanuel_birth
+
+death <- emanuel  %>% 
+  html_nodes(css = "tr:nth-child(5) td+ td") %>% 
+  html_text() %>% 
+  as_tibble() 
+emanuel_death
 
 ```
 
+#occupation
 ```{r}
+#using the computer extension 
 
-##turning the stuff into columns
+occupation <- emanuel  %>% 
+  html_nodes(css = "ul:nth-child(10)") %>% 
+  html_text() %>% 
+  as_tibble() 
+emanuel_occupation
 
-marriage_text
+```
 
-marriage_text_col <- marriage_text %>%
-  select(text)
 
-marriage_vector <- as.vector(t(marriage_text_col))
-marriage_vector
+##convert excel
 
-df$marriage <- list(marriage_vector)
+```{r}
+features_data <- data.frame()
 
-glimpse(df)
+temp_data <- bind_cols(occupation, birth, death, location)
+
+temp_data <- temp_data %>% 
+  rename(
+     occupation = value...1,
+    birth_place = value...2,
+    death_place = value...3,
+    locations = value...4
+    )
+
+glimpse(temp_data)
+```
+
+```{r}
+write_xlsx(x = features_data, path = "temp.xlsx", col_names = TRUE)
 
 ```
