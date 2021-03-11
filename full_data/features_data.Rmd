@@ -1,0 +1,111 @@
+---
+title: "features"
+author: "Grace Gao"
+date: "3/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+## load in packages
+```{r packages}
+library("readxl")
+library(tidyverse)
+library('xml2')
+library(rvest)
+library(openxlsx)
+library(readxl)
+library(writexl)
+library(dplyr)
+
+```
+
+## get data frame set up
+```{r}
+features_data <- data.frame()
+```
+
+```{r read_data}
+full_data <- read_excel("updated_full_df.xlsx")
+```
+
+### turn urls into vector
+
+```{r url_vector}
+vector_url_combined <- as.vector(unlist(full_data['full_url']))
+```
+
+
+###Loop through url
+
+```{r create_loop}
+##loops through the rows -- each url
+  i = 1
+for(value in vector_url_combined){
+  #print(antwerp_engraver_url_data[i, ])
+  #antwerp_engraver_link = antwerp_engraver_url_data[i, ]
+
+  print(value)
+  #print("count")
+  print(i)
+  i = i+1
+  
+  emanuel = read_html(value) #read's html of each link page
+  
+  #occupation address
+  location <- emanuel  %>% 
+  html_nodes(css = "ul:nth-child(12)") %>% 
+  html_text() %>% 
+  as_tibble() 
+  
+birth <- emanuel  %>% 
+  html_nodes(css = "div+ table tr:nth-child(3) td+ td") %>% 
+  html_text() %>% 
+  as_tibble() 
+
+death <- emanuel  %>% 
+  html_nodes(css = "div+ table tr:nth-child(4) td+ td") %>% 
+  html_text() %>% 
+  as_tibble() 
+
+#marriage
+marriage <- emanuel  %>% 
+  html_nodes(css = "ul:nth-child(6)") %>% 
+  html_text() %>% 
+  as_tibble() 
+  
+  #occupations
+  occupation <- emanuel  %>% 
+    html_nodes(css = "ul:nth-child(10)") %>% 
+    html_text() %>% 
+    as_tibble() 
+  
+##convert into data set
+  temp_data <- bind_cols(occupation, birth, death, location, marriage, value)
+
+  temp_data <- temp_data %>% 
+    rename(
+      occupation = value...1,
+      birth_place = value...2,
+      death_place = value...3,
+      locations = value...4, 
+      marriage = value...5,
+      url = ...6
+    )
+
+  ##bind to actual dataset
+  features_data <- bind_rows(features_data, temp_data)
+Sys.sleep(2)
+
+}
+
+```
+
+```{r}
+write_xlsx(x = features_data, path = "temp.xlsx", col_names = TRUE)
+
+```

@@ -24,7 +24,8 @@ library(dplyr)
 
 ### occupation address webscrape
 ```{r}
-emanuel <-  read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/17254")
+emanuel <-  read_html("http://www.vondel.humanities.uva.nl/ecartico/persons/3160")
+features_data <- data.frame()
 
 ```
 
@@ -36,7 +37,17 @@ location <- emanuel  %>%
   html_nodes(css = "ul:nth-child(12)") %>% 
   html_text() %>% 
   as_tibble() 
-emanuel_tibble
+location
+```
+#marraige
+```{r}
+#using the computer extension 
+
+marriage <- emanuel  %>% 
+  html_nodes(css = "ul:nth-child(6)") %>% 
+  html_text() %>% 
+  as_tibble() 
+marriage
 ```
 
 #Death and Birth Place
@@ -44,16 +55,16 @@ emanuel_tibble
 #using the computer extension 
 
 birth <- emanuel  %>% 
-  html_nodes(css = "tr:nth-child(4) td+ td") %>% 
+  html_nodes(css = "div+ table tr:nth-child(3) td+ td") %>% 
   html_text() %>% 
   as_tibble() 
-emanuel_birth
+birth
 
 death <- emanuel  %>% 
-  html_nodes(css = "tr:nth-child(5) td+ td") %>% 
+  html_nodes(css = "div+ table tr:nth-child(4) td+ td") %>% 
   html_text() %>% 
   as_tibble() 
-emanuel_death
+death
 
 ```
 
@@ -65,7 +76,7 @@ occupation <- emanuel  %>%
   html_nodes(css = "ul:nth-child(10)") %>% 
   html_text() %>% 
   as_tibble() 
-emanuel_occupation
+occupation
 
 ```
 
@@ -73,19 +84,19 @@ emanuel_occupation
 ##convert excel
 
 ```{r}
-features_data <- data.frame()
-
-temp_data <- bind_cols(occupation, birth, death, location)
+temp_data <- bind_cols(occupation, birth, death, location, marriage, value)
 
 temp_data <- temp_data %>% 
   rename(
      occupation = value...1,
     birth_place = value...2,
     death_place = value...3,
-    locations = value...4
+    locations = value...4, 
+    marriage = value...5,
+    url = ...6
     )
-
-glimpse(temp_data)
+features_data <- bind_rows(features_data, temp_data)
+glimpse(features_data)
 ```
 
 ```{r}
