@@ -24,13 +24,43 @@ library(dplyr)
 
 ```
 
+
+####add in dataset
+
+```{r}
+
+one <- read_excel("features/full_new.xlsx")
+two <- read_excel("features/full_new2.xlsx")
+three <- read_excel("features/full_new3.xlsx")
+four <- read_excel("features/full_new4.xlsx")
+five <- read_excel("features/full_new5.xlsx")
+six <- read_excel("features/full_new6.xlsx")
+seven <- read_excel("features/full_new7.xlsx")
+
+features_new <- bind_rows(one, two, three, four, five, six, seven)
+
+```
+
+```{r}
+
+write_xlsx(x = features_new, path = "features_full.xlsx", col_names = TRUE)
+
+```
+
+```{r}
+full_data_df <- read_excel("updated_full_df.xlsx")
+new_full_df <- bind_cols(full_data_df, features_new)
+write_xlsx(x = new_full_df, path = "final_df.xlsx", col_names = TRUE)
+
+```
+
 ## get data frame set up
 ```{r}
 features_data <- data.frame()
 ```
 
 ```{r read_data}
-full_data <- read_excel("updated_full_df.xlsx")
+full_data <- read_excel("webscrape_features.xlsx")
 ```
 
 ### turn urls into vector
@@ -38,7 +68,6 @@ full_data <- read_excel("updated_full_df.xlsx")
 ```{r url_vector}
 vector_url_combined <- as.vector(unlist(full_data['full_url']))
 ```
-
 
 ###Loop through url
 
@@ -106,6 +135,6 @@ Sys.sleep(2)
 ```
 
 ```{r}
-write_xlsx(x = features_data, path = "temp.xlsx", col_names = TRUE)
+write_xlsx(x = features_data, path = "full_new7.xlsx", col_names = TRUE)
 
 ```
