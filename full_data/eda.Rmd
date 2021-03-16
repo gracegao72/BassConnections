@@ -1,0 +1,126 @@
+---
+title: "EDA"
+author: "Grace Gao"
+date: "3/16/2021"
+output: html_document
+---
+
+```{r load-packages}
+# load packages
+library(tidyverse)
+library(broom)
+library(knitr)
+```
+
+# Basic EDA
+
+```{r loadData}
+final_dataset <- read_excel("final_df.xlsx")
+locations <- read_excel("fixed_location.xlsx")
+
+```
+
+
+## Birth Location
+```{r}
+ggplot(data = locations, aes(x = birthLocation)) +
+  geom_bar() + 
+  labs(x = "Location",
+       y = "Count",
+       title = "Distribution of Birth Locations")
+
+
+locations %>%
+  count(birthLocation) %>%
+  arrange(desc(n))
+```
+
+## Death Location
+```{r}
+ggplot(data = locations, aes(x = deathLocation)) +
+  geom_bar() + 
+  labs(x = "Location",
+       y = "Count",
+       title = "Distribution of Birth Locations")
+
+
+locations %>%
+  count(deathLocation) %>%
+  arrange(desc(n))
+```
+
+## Gender
+```{r}
+ggplot(data = final_dataset, aes(x = gender)) +
+  geom_bar() + 
+  labs(x = "Location",
+       y = "Count",
+       title = "Distribution of Birth Locations")
+
+# Basic piechart
+ggplot(final_dataset, aes(x="", y=value, fill=gender)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)
+
+final_dataset %>%
+  count(gender) %>%
+  arrange(desc(n))
+```
+## Number of Children 
+```{r}
+ggplot(data = final_dataset, aes(x = child_num)) +
+  geom_bar() + 
+  labs(x = "Number of Children",
+       y = "Count",
+       title = "Distribution of Number of Children")
+
+final_dataset %>%
+  count(child_num) %>%
+  arrange(desc(n))
+```
+
+## Number of Spouses
+```{r}
+ggplot(data = final_dataset, aes(x = spouse_count)) +
+  geom_bar() + 
+  labs(x = "Number of Marriages",
+       y = "Count",
+       title = "Distribution of Number of Marriages")
+
+final_dataset %>%
+  count(spouse_count) %>%
+  arrange(desc(n))
+```
+
+## Birth Year
+```{r}
+
+birth_year_new <- final_dataset %>%
+  filter(birth_year != "?")
+ggplot(data = birth_year_new, aes(x = birth_year)) +
+  stat_count() + 
+  labs(x = "Year",
+       y = "Count",
+       title = "Distribution of Birth Year")
+
+birth_year_new %>%
+  count(birth_year) %>%
+  arrange(desc(n))
+```
+
+## Death Year
+```{r}
+
+death_year_new <- final_dataset %>%
+  filter(death_year != "?")
+ggplot(data = death_year_new, aes(x = death_year)) +
+  stat_count() + 
+  labs(x = "Year",
+       y = "Count",
+       title = "Distribution of Death Year")
+
+death_year_new %>%
+  count(death_year) %>%
+  arrange(desc(n))
+```
+
