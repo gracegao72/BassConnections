@@ -53,7 +53,8 @@ amsterdam_model <- glm(as.factor(amsterdam) ~ death_year_cent + birth_year_cent 
                        child_num + spouse_count, 
                    data = new_data_2,
                    family = "binomial")
-tidy(amsterdam_model)
+tidy(amsterdam_model) %>%
+  kable(digits = 5)
 ```
 
 ```{r}
@@ -64,5 +65,6 @@ antwerp_model <- glm(as.factor(antwerp) ~ death_year_cent + birth_year_cent +
                        child_num + spouse_count, 
                    data = new_data_2,
                    family = "binomial")
-tidy(antwerp_model)
+tidy(antwerp_model) %>%
+  kable(digits = 5)
 ```
