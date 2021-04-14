@@ -1,0 +1,68 @@
+---
+title: "regression"
+author: "Grace Gao"
+date: "4/13/2021"
+output: html_document
+---
+```{r load-packages, warning = FALSE, message = FALSE}
+# load packages
+library(tidyverse)
+library(broom)
+library(knitr)
+library("readxl")
+library(tidyverse)
+library('xml2')
+library(rvest)
+library(openxlsx)
+library(readxl)
+library(writexl)
+library(dplyr)
+```
+
+```{r}
+final_data <- read_excel("final_df.xlsx")
+```
+
+```{r}
+new_data <- final_data %>%
+  filter(birth_year != "?") %>%
+  mutate(birth_year_cent = as.numeric(birth_year) - mean(as.numeric(birth_year)))
+
+new_data_2 <- new_data %>%
+  filter(death_year!="?") %>%
+  mutate(death_year_cent = as.numeric(death_year) - mean(as.numeric(death_year)))
+```
+new_data_2 <- new_data_2 %>%
+  mutate(antwerp = case_when(
+    antwerp == 1 ~ "antwerp",
+    TRUE ~ "not antwerp"
+  ))
+
+new_data_2 <- new_data_2 %>%
+  mutate(antwerp = case_when(
+    antwerp == 1 ~ "antwerp",
+    TRUE ~ "not antwerp"
+  ))
+
+
+```{r}
+amsterdam_model <- glm(as.factor(amsterdam) ~ death_year_cent + birth_year_cent + 
+                     gender + as.factor(antwerp) + as.factor(painter) + 
+                       as.factor(engraver_etcher) + 
+                       as.factor(print_book_publish) + as.factor(gold_silver_smith) + 
+                       child_num + spouse_count, 
+                   data = new_data_2,
+                   family = "binomial")
+tidy(amsterdam_model)
+```
+
+```{r}
+antwerp_model <- glm(as.factor(antwerp) ~ death_year_cent + birth_year_cent + 
+                     gender + as.factor(amsterdam) + as.factor(painter) + 
+                       as.factor(engraver_etcher) + 
+                       as.factor(print_book_publish) + as.factor(gold_silver_smith) + 
+                       child_num + spouse_count, 
+                   data = new_data_2,
+                   family = "binomial")
+tidy(antwerp_model)
+```
